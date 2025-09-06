@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
-  const [backgroundColor, setBackgroundColor] = useState('#ff0000');
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [showDrawingMessage, setShowDrawingMessage] = useState(false);
   const [storedImages, setStoredImages] = useState([]);
@@ -201,9 +200,9 @@ function App() {
         backgroundRepeat: 'no-repeat'
       };
     } else {
-      // 否则使用随机颜色
+      // 如果接口返回空数组，显示白屏
       return {
-        backgroundColor: backgroundColor
+        backgroundColor: '#ffffff'
       };
     }
   };

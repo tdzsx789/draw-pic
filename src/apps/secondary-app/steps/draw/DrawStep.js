@@ -143,7 +143,8 @@ function DrawStep({ onNext, onTimeoutToStart }) {
   useEffect(() => {
     // 随机选择一张图片
     const randomIndex = Math.floor(Math.random() * images.length);
-    setSelectedImage(images[randomIndex]);
+    // setSelectedImage(images[randomIndex]);
+    setSelectedImage(images[0]);
     setIsImageSelected(true);
 
     // 进入页面后立即开始1分钟计时
