@@ -1,0 +1,28 @@
+.end-step {
+  width: 1920px;
+  height: 1080px;
+  background-image: url('./end.png');
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior: none;
+  touch-action: none;
+  cursor: pointer;
+}
+
+.end-step::-webkit-scrollbar {
+  display: none;
+}

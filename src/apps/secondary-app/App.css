@@ -1,0 +1,24 @@
+.secondary-app {
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "Arial", sans-serif;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+.secondary-app::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,118 @@
+.start-step {
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior: none;
+  touch-action: none;
+  background-image: url(./start_1.png);
+}
+
+.start-step::-webkit-scrollbar {
+  display: none;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 1s linear;
+  z-index: 1;
+}
+
+.background-image.current {
+  opacity: 1;
+  z-index: 2;
+}
+
+.background-image.next {
+  opacity: 0;
+  z-index: 1;
+}
+
+.background-image.next.show {
+  opacity: 1;
+  z-index: 3;
+}
+
+.background-image.current.transitioning {
+  opacity: 0;
+  z-index: 1;
+}
+
+.start-button {
+  font-size: 60px;
+  padding: 30px 60px;
+  background: rgba(255, 255, 0, 0.9);
+  color: #000;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  text-shadow: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  outline: none;
+  touch-action: none;
+  position: relative;
+  z-index: 10;
+}
+
+.start-button:hover {
+  background: rgba(255, 255, 0, 1);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.start-button:active {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* 平滑的交叉淡入淡出动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.background-image.next.show {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.background-image.current.transitioning {
+  animation: fadeOut 1s ease-in-out;
+}

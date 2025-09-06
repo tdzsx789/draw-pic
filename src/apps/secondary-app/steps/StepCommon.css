@@ -1,0 +1,65 @@
+/* 共享的步骤样式 */
+.step-container {
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+.step-container::-webkit-scrollbar {
+  display: none;
+}
+
+.progress-indicator {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  z-index: 10;
+}
+
+.step-dot {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  transition: all 0.3s ease;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: none;
+}
+
+.step-dot.active {
+  background: #ffff00;
+  color: #000;
+  border-color: #ffff00;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+}
