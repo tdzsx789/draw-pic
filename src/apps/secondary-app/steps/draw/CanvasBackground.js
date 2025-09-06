@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
-import { drawImageOnCanvas } from './canvasUtils';
+import { drawImageOnCanvas, setupDrawingContext } from './canvasUtils';
 
 /**
  * Canvas 背景组件
  * @param {string} selectedImage - 选中的图片路径
  * @param {Function} onClick - 点击回调函数
  * @param {Function} onDrawingChange - 绘画状态变化回调
+ * @param {string} brushColor - 画笔颜色，默认 '#000000'
  * @param {number} width - canvas 宽度，默认 1920
  * @param {number} height - canvas 高度，默认 1080
  */
@@ -13,6 +14,7 @@ const CanvasBackground = forwardRef(({
   selectedImage, 
   onClick,
   onDrawingChange,
+  brushColor = '#000000',
   width = 1920,
   height = 1080 
 }, ref) => {
@@ -90,7 +92,7 @@ const CanvasBackground = forwardRef(({
       const canvas = canvasRef.current;
       if (canvas) {
         try {
-          await drawImageOnCanvas(canvas, selectedImage, width, height);
+          await drawImageOnCanvas(canvas, selectedImage, width, height, brushColor);
           console.log('Canvas image drawn successfully');
           
           // 保存初始状态到历史记录
@@ -106,7 +108,7 @@ const CanvasBackground = forwardRef(({
     };
 
     drawImage();
-  }, [selectedImage, width, height]);
+  }, [selectedImage, width, height, brushColor]);
 
   // 设置撤销函数引用
   useEffect(() => {
@@ -160,10 +162,12 @@ const CanvasBackground = forwardRef(({
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
+      // 重新设置画笔样式，确保使用最新的颜色
+      setupDrawingContext(ctx, brushColor);
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
     }
-  }, [getEventPos]);
+  }, [getEventPos, brushColor]);
 
   // 绘画中
   const draw = useCallback((e) => {

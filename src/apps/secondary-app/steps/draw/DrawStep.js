@@ -15,16 +15,66 @@ import image9 from './images/9.png';
 import image10 from './images/10.png';
 
 const buttonList = [
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
-  [{ x: 100, y: 100, color: 'red' }, { x: 100, y: 100, color: 'red' }],
+  {
+    color: '#41693d',
+    buttonColor: '#e48c44',
+    textColor: '#ffffff',
+    pos: { x: 1461, y: 625 }
+  },
+  {
+    color: '#71ac5b',
+    buttonColor: '#e17b36',
+    textColor: '#ffffff',
+    pos: { x: 1329, y: 645 }
+  },
+  {
+    color: '#75902b',
+    buttonColor: '#75902b',
+    textColor: '#ffffff',
+    pos: { x: 1655, y: 305 }
+  },
+  {
+    color: '#dacaac',
+    buttonColor: '#faefda',
+    textColor: '#3e2310',
+    pos: { x: 1350, y: 515 }
+  },
+  {
+    color: '#914e20',
+    buttonColor: '#914e20',
+    textColor: '#ffffff',
+    pos: { x: 1385, y: 625 }
+  },
+  {
+    color: '#914e20',
+    buttonColor: '#914e20',
+    textColor: '#ffffff',
+    pos: { x: 1687, y: 292 }
+  },
+  {
+    color: '#71ac5b',
+    buttonColor: '#e17b36',
+    textColor: '#ffffff',
+    pos: { x: 1147, y: 225 }
+  },
+  {
+    color: '#4e351e',
+    buttonColor: '#563922',
+    textColor: '#ffffff',
+    pos: { x: 1683, y: 855 }
+  },
+  {
+    color: '#4e351e',
+    buttonColor: '#563922',
+    textColor: '#ffffff',
+    pos: { x: 1438, y: 891 }
+  },
+  {
+    color: '#4e351e',
+    buttonColor: '#000000',
+    textColor: '#ffffff',
+    pos: { x: 1395, y: 494 }
+  },
 ]
 
 // 压缩图片的辅助函数
@@ -32,22 +82,22 @@ const compressImage = (canvas, quality = 0.8, maxWidth = 1920, maxHeight = 1080)
   return new Promise((resolve) => {
     // 计算压缩后的尺寸
     let { width, height } = canvas;
-    
+
     if (width > maxWidth || height > maxHeight) {
       const ratio = Math.min(maxWidth / width, maxHeight / height);
       width = width * ratio;
       height = height * ratio;
     }
-    
+
     // 创建临时 canvas 进行压缩
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
     tempCanvas.width = width;
     tempCanvas.height = height;
-    
+
     // 绘制压缩后的图像
     tempCtx.drawImage(canvas, 0, 0, width, height);
-    
+
     // 转换为压缩的 base64
     const compressedDataURL = tempCanvas.toDataURL('image/jpeg', quality);
     resolve(compressedDataURL);
@@ -73,28 +123,28 @@ const saveImageToStoredImages = async (imageData) => {
     // 生成时间戳文件名
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').split('.')[0];
     const fileName = `${timestamp}.jpg`;
-    
+
     // 将base64转换为File对象
     const imageFile = dataURLtoFile(imageData, fileName);
-    
+
     // 创建FormData
     const formData = new FormData();
     formData.append('image', imageFile);
-    
+
     // 上传到服务接口
     const response = await fetch('http://localhost:5260/storeImage', {
       method: 'POST',
       body: formData
     });
-    
+
     const result = await response.json();
-    
+
     if (result.success) {
       console.log('图片上传成功:', result.uploadedFile);
     } else {
       console.error('图片上传失败:', result.message);
     }
-    
+
   } catch (error) {
     console.error('上传图片出错:', error);
   }
@@ -109,7 +159,7 @@ const sendMessageToMainScreen = (message) => {
       timestamp: Date.now(),
       data: message
     }));
-    
+
     // 触发 storage 事件，让主屏知道有新消息
     window.dispatchEvent(new StorageEvent('storage', {
       key: 'mainScreenMessage',
@@ -119,7 +169,7 @@ const sendMessageToMainScreen = (message) => {
         data: message
       })
     }));
-    
+
     console.log('Message sent to main screen:', message);
   } catch (error) {
     console.error('Failed to send message to main screen:', error);
@@ -133,6 +183,7 @@ function DrawStep({ onNext, onTimeoutToStart }) {
   const [canUndo, setCanUndo] = useState(false);
   const undoFunctionRef = useRef(null);
   const canvasBackgroundRef = useRef(null);
+  const [buttonParams, setButtonParams] = useState(buttonList[0]);
 
   // 图片数组 - 使用 useMemo 避免每次渲染都创建新数组
   const images = React.useMemo(() => [
@@ -143,8 +194,8 @@ function DrawStep({ onNext, onTimeoutToStart }) {
   useEffect(() => {
     // 随机选择一张图片
     const randomIndex = Math.floor(Math.random() * images.length);
-    // setSelectedImage(images[randomIndex]);
-    setSelectedImage(images[0]);
+    setSelectedImage(images[randomIndex]);
+    setButtonParams(buttonList[randomIndex]);
     setIsImageSelected(true);
 
     // 进入页面后立即开始1分钟计时
@@ -193,18 +244,18 @@ function DrawStep({ onNext, onTimeoutToStart }) {
       try {
         // 获取 canvas 元素
         const canvas = canvasBackgroundRef.current.getCanvas();
-        
+
         if (canvas) {
           console.log('开始生成图片...');
-          
+
           // 压缩图片以减少存储空间
           const compressedImageData = await compressImage(canvas, 0.7, 1920, 1080);
-          
+
           console.log('图片生成完成，大小:', Math.round(compressedImageData.length / 1024), 'KB');
-          
+
           // 保存图片到D盘stored_images文件夹
           await saveImageToStoredImages(compressedImageData);
-          
+
           // 尝试保存到 localStorage
           try {
             localStorage.setItem('drawnCanvasImage', compressedImageData);
@@ -222,18 +273,18 @@ function DrawStep({ onNext, onTimeoutToStart }) {
               console.log('图片已保存到全局变量');
             }
           }
-          
+
           // 发送消息到主屏，通知图片生成完成
           sendMessageToMainScreen({
             imageData: compressedImageData,
             message: '画图完毕，请展示图片'
           });
-          
+
           console.log('已发送消息到主屏');
         } else {
           console.warn('Canvas not found');
         }
-        
+
         // 继续到下一步
         onNext();
       } catch (error) {
@@ -265,15 +316,31 @@ function DrawStep({ onNext, onTimeoutToStart }) {
         onDrawingChange={handleDrawingChange}
         width={1920}
         height={1080}
+        brushColor={buttonParams.color}
       />
       <div
         className="cancel-button"
         onClick={executeUndo}
+        style={{
+          left: buttonParams.pos.x,
+          top: buttonParams.pos.y,
+          backgroundColor: buttonParams.buttonColor,
+          color: buttonParams.textColor
+        }}
       >
         取消
       </div>
-      <div className="next-button" onClick={saveCanvasAndProceed}>
-        下一步
+      <div
+        className="next-button"
+        onClick={saveCanvasAndProceed}
+        style={{
+          left: buttonParams.pos.x,
+          top: buttonParams.pos.y + 75,
+          backgroundColor: buttonParams.buttonColor,
+          color: buttonParams.textColor
+        }}
+      >
+        确认提交
       </div>
     </div>
   );

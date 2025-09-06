@@ -8,9 +8,10 @@
  * @param {string} imageSrc - 图片源路径
  * @param {number} width - canvas 宽度，默认 1920
  * @param {number} height - canvas 高度，默认 1080
+ * @param {string} brushColor - 画笔颜色，默认 '#ff0000'
  * @returns {Promise} - 返回绘制完成的 Promise
  */
-export const drawImageOnCanvas = (canvas, imageSrc, width = 1920, height = 1080) => {
+export const drawImageOnCanvas = (canvas, imageSrc, width = 1920, height = 1080, brushColor = '#ff0000') => {
   return new Promise((resolve, reject) => {
     if (!canvas) {
       reject(new Error('Canvas element is required'));
@@ -38,7 +39,7 @@ export const drawImageOnCanvas = (canvas, imageSrc, width = 1920, height = 1080)
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         
         // 设置绘画样式
-        setupDrawingContext(ctx);
+        setupDrawingContext(ctx, brushColor);
         
         resolve();
       } catch (error) {
@@ -57,12 +58,13 @@ export const drawImageOnCanvas = (canvas, imageSrc, width = 1920, height = 1080)
 /**
  * 设置绘画上下文样式
  * @param {CanvasRenderingContext2D} ctx - canvas 2D 上下文
+ * @param {string} brushColor - 画笔颜色，默认 '#ff0000'
  */
-export const setupDrawingContext = (ctx) => {
-  ctx.lineWidth = 5;
+export const setupDrawingContext = (ctx, brushColor = '#ff0000') => {
+  ctx.lineWidth = 3; // 改为 3px
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.strokeStyle = '#ff0000'; // 红色画笔
+  ctx.strokeStyle = brushColor; // 使用传入的颜色
   ctx.globalCompositeOperation = 'source-over';
 };
 

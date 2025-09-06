@@ -48,7 +48,6 @@
   position: absolute;
   font-size: 22px;
   letter-spacing: 8px;
-  background: #ffff00;
   color: #000;
   border: none;
   border-radius: 28px;
@@ -93,8 +92,7 @@
   top: 700px;
   position: absolute;
   font-size: 22px;
-  letter-spacing: 8px;
-  background: #ffff00;
+  /* letter-spacing: 8px; */
   color: #000;
   border: none;
   border-radius: 28px;
