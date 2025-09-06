@@ -1,17 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// 根据环境变量决定加载哪个应用
+const entry = process.env.REACT_APP_ENTRY;
+
+let App;
+if (entry === "main-app") {
+  App = require("./apps/main-app/App").default;
+} else if (entry === "secondary-app") {
+  App = require("./apps/secondary-app/App").default;
+} else {
+  // 默认加载主应用
+  App = require("./apps/main-app/App").default;
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

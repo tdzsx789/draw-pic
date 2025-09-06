@@ -1,70 +1,109 @@
-# Getting Started with Create React App
+# Draw Pic - 双网页显示项目
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目概述
+这是一个React项目，使用npm start时会同时启动两个不同分辨率和背景色的网页：
+- **主网页**: 3840x2160分辨率，红色背景，运行在端口3000
+- **副网页**: 1920x1080分辨率，蓝色背景，运行在端口3001
 
-## Available Scripts
+## 项目结构
+```
+draw-pic/
+├── src/
+│   ├── apps/
+│   │   ├── main-app/           # 主应用 (3840x2160, 红色)
+│   │   │   ├── App.js          # 主应用组件
+│   │   │   └── App.css         # 主应用样式
+│   │   └── secondary-app/      # 副应用 (1920x1080, 蓝色)
+│   │       ├── App.js          # 副应用组件
+│   │       └── App.css         # 副应用样式
+│   └── index.js                # 动态入口文件
+├── public/                     # 公共资源目录
+├── package.json                # 项目配置
+├── open-displays.sh           # 打开双网页脚本
+└── README.md                  # 项目说明
+```
 
-In the project directory, you can run:
+## 启动方式
 
-### `npm start`
+### 方式1: 启动开发服务器
+```bash
+npm start
+```
+这会启动两个开发服务器，然后手动在浏览器中访问：
+- 主网页: http://localhost:3000
+- 副网页: http://localhost:3001
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 方式2: 智能双屏显示
+```bash
+npm run open-displays
+```
+这会自动检测显示器配置并在Chrome浏览器中打开两个网页：
+- **多显示器**: 分别在主屏和副屏打开独立的Chrome窗口
+- **单显示器**: 在同一屏幕左右两侧打开两个窗口
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 方式3: 一键启动双屏显示
+```bash
+npm run start-dual
+```
+这会启动开发服务器，等待15秒后自动执行智能双屏显示。
 
-### `npm test`
+### 方式4: 传统方式
+```bash
+npm run start-all
+```
+保留原有的启动方式。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 访问地址
+- **主网页**: http://localhost:3000 (3840x2160, 红色背景)
+- **副网页**: http://localhost:3001 (1920x1080, 蓝色背景)
 
-### `npm run build`
+## 技术特点
+1. **双服务器启动**: 使用concurrently同时启动两个开发服务器
+2. **环境变量区分**: 通过REACT_APP_ENTRY环境变量区分不同应用
+3. **清晰的文件组织**: 应用代码独立存放在src/apps目录下
+4. **响应式设计**: 适配不同分辨率的显示器
+5. **美观的UI**: 包含渐变背景、毛玻璃效果、阴影等现代设计元素
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 显示器配置建议
+- **主网页**: 建议在4K显示器或大屏幕上显示
+- **副网页**: 适合标准1080p显示器显示
+- 可以通过拖拽浏览器窗口到不同显示器来分别显示两个网页
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 故障排除
+如果遇到端口占用问题，可以：
+1. 停止当前进程: `pkill -f "react-scripts start"`
+2. 重新启动: `npm start`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 开发说明
+- 主应用代码位于: `src/apps/main-app/`
+- 副应用代码位于: `src/apps/secondary-app/`
+- 入口文件: `src/index.js` (根据环境变量动态加载不同应用)
 
-### `npm run eject`
+## 显示器配置说明
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 自动检测功能
+脚本会自动检测您的显示器配置：
+- **单显示器**: 两个窗口将在同一屏幕左右两侧打开
+- **多显示器**: 分别在主屏和副屏打开独立窗口
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 手动调整窗口位置
+如果自动定位不准确，您可以修改 `open-displays.sh` 中的坐标：
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**单显示器模式坐标:**
+- 左窗口: `{0, 0, 960, 1080}` (左半屏)
+- 右窗口: `{960, 0, 1920, 1080}` (右半屏)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+**多显示器模式坐标:**
+- 主屏: `{0, 0, 1920, 1080}` (第一个显示器)
+- 副屏: `{1920, 0, 3840, 1080}` (第二个显示器在右侧)
 
-## Learn More
+### 常见显示器配置
+- **主屏在左，副屏在右**: 使用默认配置
+- **主屏在右，副屏在左**: 将副屏坐标改为 `{-1920, 0, 0, 1080}`
+- **上下排列**: 将副屏坐标改为 `{0, 1080, 1920, 2160}`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 推荐使用方式
+```bash
+npm run start-dual
+```
+这是最便捷的启动方式，会自动启动服务器并智能打开双屏显示。
